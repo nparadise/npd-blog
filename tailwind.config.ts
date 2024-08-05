@@ -8,10 +8,12 @@ const config: Config = {
   ],
   theme: {
     extend: {
-      backgroundImage: {
-        "gradient-radial": "radial-gradient(var(--tw-gradient-stops))",
-        "gradient-conic":
-          "conic-gradient(from 180deg at 50% 50%, var(--tw-gradient-stops))",
+      fontFamily: {
+        gothic: ["var(--font-nanum-gothic)"],
+        myeongjo: ["var(--font-nanum-myeongjo)"],
+      },
+      transitionProperty: {
+        "max-height-spacing": "height, max-height, padding, margin",
       },
     },
   },
