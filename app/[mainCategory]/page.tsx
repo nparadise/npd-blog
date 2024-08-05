@@ -17,20 +17,18 @@ export default async function CategoryPosts({ params, searchParams }: Props) {
     ? decodeURI(searchParams.subCategory)
     : undefined;
   const currentPage = searchParams.page ? parseInt(searchParams.page) : 1;
+  const itemsPerPage = 2;
   const [posts, postCount] = await Promise.all([
-    fetchCategoryPostList({ main, sub }, currentPage),
+    fetchCategoryPostList({ main, sub }, currentPage, itemsPerPage),
     fetchCategoryPostCount({ main, sub }),
   ]);
-  const pageCount = Math.ceil(postCount / 10);
+  const pageCount = Math.ceil(postCount / itemsPerPage);
 
   return (
     <>
       <CategoryTitle mainCategory={main} subCategory={sub} />
       <PostList posts={posts} />
-      <Pagination
-        pages={pageCount}
-        currentPage={currentPage}
-      />
+      <Pagination pages={pageCount} currentPage={currentPage} />
       <div className="mx-1 flex justify-end">
         <button
           type="button"

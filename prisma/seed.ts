@@ -1,4 +1,5 @@
 import { PrismaClient } from "@prisma/client";
+import { LoremIpsum } from "lorem-ipsum";
 import { posts } from "../app/lib/placeholder-data";
 const prisma = new PrismaClient();
 
@@ -65,8 +66,30 @@ async function secondSeed() {
   console.log(res);
 }
 
+async function thirdSeed() {
+  const lorem = new LoremIpsum({
+    sentencesPerParagraph: {
+      max: 8,
+      min: 4,
+    },
+    wordsPerSentence: {
+      max: 16,
+      min: 4,
+    },
+  });
+  const data = [];
+  for (let i = 0; i < 30; i++) {
+    data.push({
+      title: lorem.generateSentences(1),
+      content: lorem.generateParagraphs(1),
+      subCategoryId: Math.floor(Math.random() * 4 + 1),
+    });
+  }
+  const res = await prisma.post.createMany({ data });
+}
+
 async function main() {
-  await secondSeed();
+  await thirdSeed();
 }
 
 main()

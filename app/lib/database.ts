@@ -31,38 +31,41 @@ export async function fetchMainCategoryPostCount(query: string) {
   return counter;
 }
 
-const ITEMS_PER_PAGE = 10;
 export async function fetchMainCategoryPosts(
   query: string,
   currentPage: number,
+  itemsPerPage: number = 10,
 ): Promise<PostWithSubCategory[]> {
   try {
-    const res = await prisma.mainCategory.findUnique({
+    // subCategoryIds
+    const mainRes = await prisma.mainCategory.findUnique({
       where: { name: query },
       select: {
-        children: {
-          select: {
-            name: true,
-            posts: {
-              skip: ITEMS_PER_PAGE * (currentPage - 1),
-              take: ITEMS_PER_PAGE,
-            },
-          },
-        },
+        children: true,
       },
+    });
+    if (!mainRes) throw new Error(`No mainCategory named: ${query}`);
+    const subCategoryIds = mainRes.children.map((v) => v.id);
+    const subCategoryObject: { [index: number]: string } = {};
+    mainRes.children.forEach((v) => {
+      subCategoryObject[v.id] = v.name;
+    });
+
+    const res = await prisma.post.findMany({
+      where: { subCategoryId: { in: subCategoryIds } },
+      skip: itemsPerPage * (currentPage - 1),
+      take: itemsPerPage,
+      orderBy: { createdAt: "desc" },
     });
 
     const posts: PostWithSubCategory[] = [];
-    res?.children.forEach((subCategory) => {
-      posts.push(
-        ...subCategory.posts.map(
-          (v): PostWithSubCategory => ({
-            ...v,
-            subCategoryName: subCategory.name,
-          }),
-        ),
-      );
+    res?.forEach((v) => {
+      posts.push({
+        ...v,
+        subCategoryName: subCategoryObject[v.subCategoryId],
+      });
     });
+
     return posts;
   } catch (error) {
     console.error(error);
@@ -93,6 +96,7 @@ export async function fetchSubCategoryPostCount(query: {
 export async function fetchSubCategoryPosts(
   query: { main: string; sub: string },
   currentPage: number,
+  itemsPerPage: number = 10,
 ): Promise<Post[]> {
   const parentId = (
     await prisma.mainCategory.findUnique({
@@ -109,8 +113,8 @@ export async function fetchSubCategoryPosts(
     where: { mainCategoryId: parentId, name: query.sub },
     select: {
       posts: {
-        skip: ITEMS_PER_PAGE * (currentPage - 1),
-        take: ITEMS_PER_PAGE,
+        skip: itemsPerPage * (currentPage - 1),
+        take: itemsPerPage,
       },
     },
   });
@@ -129,13 +133,15 @@ export async function fetchCategoryPostCount(query: {
 export async function fetchCategoryPostList(
   query: { main: string; sub?: string },
   currentPage: number,
+  itemsPerPage: number = 10,
 ): Promise<Post[] | PostWithSubCategory[]> {
   if (!query.sub) {
-    return fetchMainCategoryPosts(query.main, currentPage);
+    return fetchMainCategoryPosts(query.main, currentPage, itemsPerPage);
   } else {
     return fetchSubCategoryPosts(
       query as { main: string; sub: string },
       currentPage,
+      itemsPerPage
     );
   }
 }
