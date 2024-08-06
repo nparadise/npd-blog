@@ -1,5 +1,7 @@
 import CategoryTitle from "@/app/components/CategoryTitle";
+import MarkdownView from "@/app/components/MarkdownView";
 import { fetchPostById } from "@/app/lib/database";
+import Link from "next/link";
 
 export default async function PostPage({
   params,
@@ -29,17 +31,21 @@ export default async function PostPage({
         </div>
       </header>
 
-      <article className="m-2 break-words rounded-sm border-2 border-blue-300 p-2 md:mx-1">
-        {post.content}
+      <article
+        data-color-mode="light"
+        className="m-2 break-words rounded-sm border-2 border-blue-300 p-4 md:mx-1"
+      >
+        <MarkdownView content={post.content} />
       </article>
+
       {/* TODO: 블로그의 주인일 때 글 수정/삭제 기능이 들어갈 자리 */}
       <div className="mx-2 flex justify-end gap-2 md:mx-1">
-        <button
-          type="button"
+        <Link
+          href={`/edit/${params.postId}`}
           className="rounded-sm bg-blue-400 px-2 py-1 text-white hover:bg-blue-600 active:bg-blue-800"
         >
           수정
-        </button>
+        </Link>
         <button
           type="button"
           className="rounded-sm bg-red-400 px-2 py-1 text-white hover:bg-red-600 active:bg-red-800"

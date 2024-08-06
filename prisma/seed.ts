@@ -10,17 +10,7 @@ async function firstSeed() {
     create: {
       name: "잡담",
       children: {
-        create: [
-          {
-            name: "잡담",
-            posts: {
-              create: posts.map(({ title, content }) => ({
-                title: title,
-                content: content,
-              })),
-            },
-          },
-        ],
+        create: { name: "잡담" },
       },
     },
   });
@@ -89,6 +79,7 @@ async function thirdSeed() {
 }
 
 async function main() {
+  await firstSeed();
   await thirdSeed();
 }
 

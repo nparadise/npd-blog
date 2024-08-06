@@ -1,8 +1,11 @@
 import { prisma } from "./client";
-import { posts } from "./placeholder-data";
-import { Post, PostWithSubCategory } from "./types";
+import { MainCategory, Post, PostWithSubCategory, SubCategory } from "./types";
 
-export async function fetchCategories() {
+export interface FetchCategoriesReturnType extends MainCategory {
+  children: SubCategory[];
+}
+
+export async function fetchCategories(): Promise<FetchCategoriesReturnType[]> {
   try {
     const allCategories = await prisma.mainCategory.findMany({
       include: {
@@ -115,6 +118,7 @@ export async function fetchSubCategoryPosts(
       posts: {
         skip: itemsPerPage * (currentPage - 1),
         take: itemsPerPage,
+        orderBy: { createdAt: "desc" },
       },
     },
   });
@@ -141,7 +145,7 @@ export async function fetchCategoryPostList(
     return fetchSubCategoryPosts(
       query as { main: string; sub: string },
       currentPage,
-      itemsPerPage
+      itemsPerPage,
     );
   }
 }
@@ -168,5 +172,51 @@ export async function fetchPostById(id: number) {
   } catch (error) {
     console.error(error);
     throw new Error(`Failed to fetch post by id: ${id}`);
+  }
+}
+
+export async function createPost(
+  title: string,
+  content: string,
+  subCategoryId: number,
+) {
+  try {
+    const res = await prisma.post.create({
+      data: {
+        title: title,
+        content: content,
+        subCategoryId: subCategoryId,
+      },
+    });
+    console.log(res);
+
+    return res;
+  } catch (error) {
+    console.error(error);
+    throw new Error("Failed to create post");
+  }
+}
+
+export async function updatePost(
+  postId: number,
+  title: string,
+  content: string,
+  subCategoryId: number,
+) {
+  try {
+    const res = await prisma.post.update({
+      where: { id: postId },
+      data: {
+        title: title,
+        content: content,
+        subCategoryId: subCategoryId,
+      },
+    });
+    console.log(res);
+
+    return res;
+  } catch (error) {
+    console.error(error);
+    throw new Error(`Failed to udpate post: PID: ${postId}`);
   }
 }

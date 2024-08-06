@@ -5,6 +5,7 @@ import {
 import PostList from "@/app/components/PostList";
 import Pagination from "@/app/components/Pagination";
 import CategoryTitle from "@/app/components/CategoryTitle";
+import Link from "next/link";
 
 interface Props {
   params: { mainCategory: string };
@@ -17,7 +18,7 @@ export default async function CategoryPosts({ params, searchParams }: Props) {
     ? decodeURI(searchParams.subCategory)
     : undefined;
   const currentPage = searchParams.page ? parseInt(searchParams.page) : 1;
-  const itemsPerPage = 2;
+  const itemsPerPage = 15;
   const [posts, postCount] = await Promise.all([
     fetchCategoryPostList({ main, sub }, currentPage, itemsPerPage),
     fetchCategoryPostCount({ main, sub }),
@@ -30,12 +31,13 @@ export default async function CategoryPosts({ params, searchParams }: Props) {
       <PostList posts={posts} />
       <Pagination pages={pageCount} currentPage={currentPage} />
       <div className="mx-1 flex justify-end">
-        <button
+        <Link
+          href="/create"
           type="button"
           className="rounded-sm bg-blue-400 px-2 py-1 text-white hover:bg-blue-600 active:bg-blue-800"
         >
           쓰기
-        </button>
+        </Link>
       </div>
     </>
   );

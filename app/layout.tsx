@@ -1,5 +1,9 @@
 import type { Metadata } from "next";
-import { Nanum_Gothic, Nanum_Myeongjo } from "next/font/google";
+import {
+  Nanum_Gothic,
+  Nanum_Gothic_Coding,
+  Nanum_Myeongjo,
+} from "next/font/google";
 import "./globals.css";
 import SideMenu from "@/app/components/SideMenu";
 import Navigation from "@/app/components/Navigation";
@@ -16,6 +20,12 @@ const nanum_myeongjo = Nanum_Myeongjo({
   variable: "--font-nanum-myeongjo",
 });
 
+const nanum_coding = Nanum_Gothic_Coding({
+  subsets: ["latin"],
+  weight: ["400", "700"],
+  variable: "--font-nanum-coding",
+});
+
 export const metadata: Metadata = {
   title: "NPD Blog",
   description: "My Blog",
@@ -29,7 +39,7 @@ export default function RootLayout({
   return (
     <html
       lang="ko"
-      className={`${nanum_gothic.variable} ${nanum_myeongjo.variable}`}
+      className={`${nanum_gothic.variable} ${nanum_myeongjo.variable} ${nanum_coding.variable}`}
     >
       <body className="h-dvh w-dvw font-gothic md:grid md:grid-cols-4 lg:grid-cols-5">
         <SideMenu>

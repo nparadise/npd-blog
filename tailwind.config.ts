@@ -11,6 +11,7 @@ const config: Config = {
       fontFamily: {
         gothic: ["var(--font-nanum-gothic)"],
         myeongjo: ["var(--font-nanum-myeongjo)"],
+        coding: ["var(--font-nanum-coding)"],
       },
       transitionProperty: {
         "max-height-spacing": "height, max-height, padding, margin",
