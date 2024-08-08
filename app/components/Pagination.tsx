@@ -25,7 +25,7 @@ function PaginationInput({
 
   const createQueryString = useCallback(
     (key: string, value: string) => {
-      const params = new URLSearchParams(searchParams.toString());
+      const params = new URLSearchParams(searchParams?.toString());
       params.set(key, value);
       return params.toString();
     },
@@ -44,7 +44,7 @@ function PaginationInput({
       let value = currentPage.toString();
       if (data.has("pageInput")) {
         const res = data.get("pageInput");
-        value = res ? res as string : value;
+        value = res ? (res as string) : value;
       }
 
       router.push(createHref(createQueryString("page", value)));
@@ -112,7 +112,7 @@ function Pagination({ pages, currentPage }: Props) {
 
   const createQueryString = useCallback(
     (key: string, value: string) => {
-      const params = new URLSearchParams(searchParams.toString());
+      const params = new URLSearchParams(searchParams?.toString());
       params.set(key, value);
       return params.toString();
     },
@@ -153,23 +153,29 @@ function Pagination({ pages, currentPage }: Props) {
       buttons.push(createPaginationButton(3, currentPage));
       buttons.push(createPaginationButton(4, currentPage));
       buttons.push(createPaginationButton(5, currentPage));
-      buttons.push(<PaginationEllipsis />);
+      buttons.push(<PaginationEllipsis key="ellipsis-after" />);
     } else if (currentPage >= pages - 3) {
-      buttons.push(<PaginationEllipsis />);
+      buttons.push(<PaginationEllipsis key="ellipsis-before" />);
       buttons.push(createPaginationButton(pages - 4, currentPage));
       buttons.push(createPaginationButton(pages - 3, currentPage));
       buttons.push(createPaginationButton(pages - 2, currentPage));
       buttons.push(createPaginationButton(pages - 1, currentPage));
     } else {
-      buttons.push(<PaginationEllipsis />);
+      buttons.push(<PaginationEllipsis key="ellipsis-before" />);
       buttons.push(createPaginationButton(currentPage - 1, currentPage));
       buttons.push(createPaginationButton(currentPage, currentPage));
       buttons.push(createPaginationButton(currentPage + 1, currentPage));
-      buttons.push(<PaginationEllipsis />);
+      buttons.push(<PaginationEllipsis key="ellipsis-after" />);
     }
     buttons.push(createPaginationButton(pages, currentPage));
   }
-  buttons.push(<PaginationInput pages={pages} currentPage={currentPage} />);
+  buttons.push(
+    <PaginationInput
+      pages={pages}
+      currentPage={currentPage}
+      key="pagination-input"
+    />,
+  );
 
   return (
     <div id="pagination" className="mx-auto w-fit">

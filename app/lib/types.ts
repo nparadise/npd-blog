@@ -29,4 +29,7 @@ export declare interface SubCategory {
   mainCategoryId: number;
 }
 
-export {};
+export declare interface User {
+  email: string;
+  password: string;
+}
