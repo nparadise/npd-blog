@@ -47,14 +47,14 @@ export default async function RootLayout({
       className={`${nanum_gothic.variable} ${nanum_myeongjo.variable} ${nanum_coding.variable}`}
     >
       <body className="h-dvh w-dvw font-gothic md:grid md:grid-cols-4 lg:grid-cols-5">
-        <AuthSession>
+        {/* <AuthSession> */}
           <SideMenu session={session}>
             <Navigation />
           </SideMenu>
           <main className="h-full overflow-x-hidden overflow-y-scroll pt-14 md:col-span-3 md:px-2 md:pt-0 lg:col-span-4">
             {children}
           </main>
-        </AuthSession>
+        {/* </AuthSession> */}
       </body>
     </html>
   );

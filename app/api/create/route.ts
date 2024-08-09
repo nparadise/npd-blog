@@ -1,7 +1,13 @@
 import { createPost } from "@/app/lib/database";
 import { PostForCreate } from "@/app/lib/types";
+import { getSession } from "next-auth/react";
 
 export async function POST(request: Request) {
+  const session = getSession();
+  if (!session) {
+    return new Response(null, { status: 401 });
+  }
+  
   let req = await request.json();
   if (!(req as PostForCreate)) {
     return new Response(`POST body error`, { status: 400 });
