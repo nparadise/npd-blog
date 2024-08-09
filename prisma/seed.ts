@@ -3,7 +3,7 @@ import { LoremIpsum } from "lorem-ipsum";
 import { posts } from "../app/lib/placeholder-data";
 const prisma = new PrismaClient();
 
-async function firstSeed() {
+async function manualCategorySeed() {
   const chitchat = await prisma.mainCategory.upsert({
     where: { name: "잡담" },
     update: {},
@@ -44,19 +44,7 @@ async function firstSeed() {
   console.log({ chitchat, dev, game });
 }
 
-async function secondSeed() {
-  const res = await prisma.post.createMany({
-    data: posts.map((v) => ({
-      title: v.title,
-      content: v.content,
-      subCategoryId: v.category,
-    })),
-  });
-
-  console.log(res);
-}
-
-async function thirdSeed() {
+async function randomPostCreateSeed() {
   const lorem = new LoremIpsum({
     sentencesPerParagraph: {
       max: 8,
@@ -72,15 +60,15 @@ async function thirdSeed() {
     data.push({
       title: lorem.generateSentences(1),
       content: lorem.generateParagraphs(1),
-      subCategoryId: Math.floor(Math.random() * 4 + 1),
+      subCategoryId: Math.floor(Math.random() * 5 + 1),
     });
   }
   const res = await prisma.post.createMany({ data });
 }
 
 async function main() {
-  await firstSeed();
-  await thirdSeed();
+  await manualCategorySeed();
+  await randomPostCreateSeed();
 }
 
 main()
