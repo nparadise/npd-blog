@@ -46,15 +46,12 @@ export default async function PostPage({
       </article>
 
       <div className="mx-2 flex justify-end gap-2 md:mx-1">
-        <Link
-          href={`/edit/${params.postId}`}
-          className="rounded-sm bg-blue-400 px-2 py-1 text-white hover:bg-blue-600 active:bg-blue-800"
-        >
+        <Link href={`/edit/${params.postId}`} className="main-button">
           수정
         </Link>
         <Link
           href={`/post/${params.postId}?delete=true`}
-          className="rounded-sm bg-red-400 px-2 py-1 text-white hover:bg-red-600 active:bg-red-800"
+          className="alert-button"
         >
           삭제
         </Link>

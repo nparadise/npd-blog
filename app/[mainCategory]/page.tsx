@@ -31,11 +31,7 @@ export default async function CategoryPosts({ params, searchParams }: Props) {
       <PostList posts={posts} />
       <Pagination pages={pageCount} currentPage={currentPage} />
       <div className="mx-1 flex justify-end">
-        <Link
-          href="/create"
-          type="button"
-          className="rounded-sm bg-blue-400 px-2 py-1 text-white hover:bg-blue-600 active:bg-blue-800"
-        >
+        <Link href="/create" type="button" className="main-button">
           쓰기
         </Link>
       </div>

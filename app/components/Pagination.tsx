@@ -65,10 +65,7 @@ function PaginationInput({
         className="mx-1 inline-block h-8 w-9 border border-gray-200 py-0.5 text-center align-middle"
       />
       <span className="text-sm">/ {pages}</span>
-      <button
-        type="submit"
-        className="ms-2 h-8 rounded-sm bg-blue-400 px-2 align-middle text-white"
-      >
+      <button type="submit" className="main-button ms-2">
         확인
       </button>
     </form>
