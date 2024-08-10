@@ -1,5 +1,11 @@
 import { prisma } from "./client";
-import { MainCategory, Post, PostWithSubCategory, SubCategory } from "./types";
+import {
+  MainCategory,
+  Post,
+  PostWithCategory,
+  PostWithSubCategory,
+  SubCategory,
+} from "./types";
 
 export interface FetchCategoriesReturnType extends MainCategory {
   children: SubCategory[];
@@ -19,7 +25,9 @@ export async function fetchCategories(): Promise<FetchCategoriesReturnType[]> {
   }
 }
 
-export async function fetchMainCategoryPostCount(query: string) {
+export async function fetchMainCategoryPostCount(
+  query: string,
+): Promise<number> {
   const mainRes = await prisma.mainCategory.findUnique({
     where: { name: query },
     select: { children: { select: { _count: { select: { posts: true } } } } },
@@ -79,7 +87,7 @@ export async function fetchMainCategoryPosts(
 export async function fetchSubCategoryPostCount(query: {
   main: string;
   sub: string;
-}) {
+}): Promise<number> {
   const mainRes = await prisma.mainCategory.findUnique({
     where: { name: query.main },
     select: {
@@ -126,6 +134,34 @@ export async function fetchSubCategoryPosts(
   return res?.posts ?? [];
 }
 
+export async function fetchSubCategoryById(
+  subCategoryId: number,
+): Promise<{ mainCategory: string; subCategory: string }> {
+  try {
+    const queryRes = await prisma.subCategory.findUnique({
+      where: { id: subCategoryId },
+      select: {
+        name: true,
+        parent: {
+          select: {
+            name: true,
+          },
+        },
+      },
+    });
+
+    if (!queryRes) throw new Error("No such subCategory");
+
+    return {
+      mainCategory: queryRes.parent.name,
+      subCategory: queryRes.name,
+    };
+  } catch (error) {
+    console.error(error);
+    throw error;
+  }
+}
+
 export async function fetchCategoryPostCount(query: {
   main: string;
   sub?: string;
@@ -150,7 +186,7 @@ export async function fetchCategoryPostList(
   }
 }
 
-export async function fetchPostById(id: number) {
+export async function fetchPostById(id: number): Promise<PostWithCategory> {
   try {
     const res = await prisma.post.findUnique({
       where: { id: id },
@@ -179,7 +215,7 @@ export async function createPost(
   title: string,
   content: string,
   subCategoryId: number,
-) {
+): Promise<Post> {
   try {
     const res = await prisma.post.create({
       data: {
@@ -202,7 +238,7 @@ export async function updatePost(
   title: string,
   content: string,
   subCategoryId: number,
-) {
+): Promise<Post> {
   try {
     const res = await prisma.post.update({
       where: { id: postId },
@@ -213,10 +249,22 @@ export async function updatePost(
       },
     });
     console.log(res);
-
     return res;
   } catch (error) {
     console.error(error);
     throw new Error(`Failed to udpate post: PID: ${postId}`);
+  }
+}
+
+export async function deletePost(postId: number) {
+  try {
+    const res = await prisma.post.delete({
+      where: { id: postId },
+    });
+
+    return res;
+  } catch (error) {
+    console.error(error);
+    throw error;
   }
 }

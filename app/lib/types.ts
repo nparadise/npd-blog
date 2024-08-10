@@ -1,3 +1,14 @@
+export declare interface MainSubCategoryName {
+  mainCategory: string;
+  subCategory: string;
+}
+
+export declare interface PostWithCategory {
+  post: Post;
+  subCategory: string;
+  mainCategory: string;
+}
+
 export declare interface PostForCreate {
   title: string;
   content: string;

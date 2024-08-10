@@ -1,18 +1,25 @@
 import CategoryTitle from "@/app/components/CategoryTitle";
+import DeleteForm from "@/app/components/DeleteForm";
 import MarkdownView from "@/app/components/MarkdownView";
 import { fetchPostById } from "@/app/lib/database";
 import Link from "next/link";
 
 export default async function PostPage({
   params,
+  searchParams,
 }: {
   params: {
     postId: string;
+  };
+  searchParams: {
+    delete: string;
   };
 }) {
   const { post, mainCategory, subCategory } = await fetchPostById(
     parseInt(params.postId),
   );
+
+  const showDeleteForm: boolean = searchParams.delete === "true";
 
   return (
     <>
@@ -38,7 +45,6 @@ export default async function PostPage({
         <MarkdownView content={post.content} />
       </article>
 
-      {/* TODO: 블로그의 주인일 때 글 수정/삭제 기능이 들어갈 자리 */}
       <div className="mx-2 flex justify-end gap-2 md:mx-1">
         <Link
           href={`/edit/${params.postId}`}
@@ -46,14 +52,15 @@ export default async function PostPage({
         >
           수정
         </Link>
-        <button
-          type="button"
+        <Link
+          href={`/post/${params.postId}?delete=true`}
           className="rounded-sm bg-red-400 px-2 py-1 text-white hover:bg-red-600 active:bg-red-800"
         >
           삭제
-        </button>
+        </Link>
       </div>
       {/* TODO: 댓글 기능 들어갈 자리 */}
+      {showDeleteForm && <DeleteForm postId={post.id.toString()} />}
     </>
   );
 }
