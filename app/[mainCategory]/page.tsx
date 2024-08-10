@@ -4,7 +4,7 @@ import {
 } from "@/app/lib/database";
 import PostList from "@/app/components/PostList";
 import Pagination from "@/app/components/Pagination";
-import CategoryTitle from "@/app/components/CategoryTitle";
+import Title from "@/app/components/Title";
 import Link from "next/link";
 
 interface Props {
@@ -27,7 +27,7 @@ export default async function CategoryPosts({ params, searchParams }: Props) {
 
   return (
     <>
-      <CategoryTitle mainCategory={main} subCategory={sub} />
+      <Title main={main} sub={sub} />
       <PostList posts={posts} />
       <Pagination pages={pageCount} currentPage={currentPage} />
       <div className="mx-1 flex justify-end">

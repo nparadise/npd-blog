@@ -1,4 +1,4 @@
-import CategoryTitle from "@/app/components/CategoryTitle";
+import Title from "@/app/components/Title";
 import DeleteForm from "@/app/components/DeleteForm";
 import MarkdownView from "@/app/components/MarkdownView";
 import { fetchPostById } from "@/app/lib/database";
@@ -23,7 +23,7 @@ export default async function PostPage({
 
   return (
     <>
-      <CategoryTitle mainCategory={mainCategory} subCategory={subCategory} />
+      <Title main={mainCategory} sub={subCategory} />
       <header className="sticky mx-2 md:mx-1">
         <h1 className="inline text-xl font-bold">{post.title}</h1>
         <div className="text-sm">
