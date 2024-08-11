@@ -6,7 +6,7 @@ import PostList from "@/app/components/PostList";
 import Pagination from "@/app/components/Pagination";
 import Title from "@/app/components/Title";
 import Link from "next/link";
-import { Metadata, ResolvingMetadata } from "next";
+import { Metadata } from "next";
 
 interface Props {
   params: { mainCategory: string };

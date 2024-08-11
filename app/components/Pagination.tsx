@@ -5,10 +5,11 @@ import Link from "next/link";
 import { usePathname, useRouter, useSearchParams } from "next/navigation";
 import { memo, useCallback } from "react";
 import { FaEllipsis } from "react-icons/fa6";
+import { UrlObject } from "url";
 
 interface ButtonProps {
   isCurrentPage: boolean;
-  href: string;
+  href: string | UrlObject;
   children?: React.ReactNode;
 }
 
@@ -59,6 +60,9 @@ function PaginationInput({
     >
       <span className="font-gothic text-sm">Go to page</span>
       <input
+        type="number"
+        min={1}
+        max={pages}
         id="pageInput"
         name="pageInput"
         placeholder={currentPage.toString()}
@@ -105,23 +109,6 @@ interface Props {
 
 function Pagination({ pages, currentPage }: Props) {
   const pathname = usePathname();
-  const searchParams = useSearchParams();
-
-  const createQueryString = useCallback(
-    (key: string, value: string) => {
-      const params = new URLSearchParams(searchParams?.toString());
-      params.set(key, value);
-      return params.toString();
-    },
-    [searchParams],
-  );
-
-  const createHref = useCallback(
-    (params: string) => {
-      return `${pathname}?${params}`;
-    },
-    [pathname],
-  );
 
   const createPaginationButton = useCallback(
     (page: number, currentPage: number) => {
@@ -129,13 +116,16 @@ function Pagination({ pages, currentPage }: Props) {
         <PaginationButton
           key={`page-${page}`}
           isCurrentPage={page === currentPage}
-          href={createHref(createQueryString("page", page.toString()))}
+          href={{
+            pathname: pathname,
+            query: { page: page.toString() },
+          }}
         >
           {page}
         </PaginationButton>
       );
     },
-    [createHref, createQueryString],
+    [pathname],
   );
 
   const buttons: React.ReactNode[] = [];

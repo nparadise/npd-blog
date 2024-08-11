@@ -3,10 +3,11 @@
 import clsx from "clsx";
 import Link from "next/link";
 import { usePathname } from "next/navigation";
+import { UrlObject } from "url";
 
 interface Props {
   children?: React.ReactNode;
-  href: string;
+  href: UrlObject | string;
 }
 
 export default function NavListItem({ children, href }: Props) {

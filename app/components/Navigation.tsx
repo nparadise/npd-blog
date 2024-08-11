@@ -27,7 +27,10 @@ export default async function Navigation() {
               {children.map(({ name: subCategory }) => (
                 <NavListItem
                   key={`link-sub-${subCategory}`}
-                  href={`/${encodeURI(mainCategory)}?subCategory=${encodeURI(subCategory)}`}
+                  href={{
+                    pathname: `/${encodeURI(mainCategory)}`,
+                    query: { subCategory: encodeURI(subCategory) },
+                  }}
                 >
                   {subCategory}
                 </NavListItem>
