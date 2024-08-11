@@ -1,7 +1,7 @@
-import AddMainCategoryForm from "@/app/components/setting/AddMainCategoryForm";
-import AddSubCategoryForm from "@/app/components/setting/AddSubCateogoryForm";
-import EditMainCategoryForm from "@/app/components/setting/EditMainCategoryForm";
-import EditSubCategoryForm from "@/app/components/setting/EditSubCategoryForm";
+import AddMainCategoryForm from "@/app/components/setting/category/AddMainCategoryForm";
+import AddSubCategoryForm from "@/app/components/setting/category/AddSubCateogoryForm";
+import EditMainCategoryForm from "@/app/components/setting/category/EditMainCategoryForm";
+import EditSubCategoryForm from "@/app/components/setting/category/EditSubCategoryForm";
 import Title from "@/app/components/Title";
 import { fetchCategories } from "@/app/lib/database";
 import { Metadata } from "next";
