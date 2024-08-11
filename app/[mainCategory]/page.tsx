@@ -6,10 +6,25 @@ import PostList from "@/app/components/PostList";
 import Pagination from "@/app/components/Pagination";
 import Title from "@/app/components/Title";
 import Link from "next/link";
+import { Metadata, ResolvingMetadata } from "next";
 
 interface Props {
   params: { mainCategory: string };
   searchParams: { subCategory?: string; page?: string };
+}
+
+export async function generateMetadata({
+  params,
+  searchParams,
+}: Props): Promise<Metadata> {
+  const main: string = decodeURI(params.mainCategory);
+  const sub: string = searchParams.subCategory
+    ? ` - ${decodeURI(searchParams.subCategory)}`
+    : "";
+
+  return {
+    title: `${main}${sub}`,
+  };
 }
 
 export default async function CategoryPosts({ params, searchParams }: Props) {

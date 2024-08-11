@@ -25,6 +25,21 @@ export async function fetchCategories(): Promise<FetchCategoriesReturnType[]> {
   }
 }
 
+export async function fetchMainCategories() {
+  try {
+    const mainCategoryList = await prisma.mainCategory.findMany({
+      select: {
+        id: true,
+        name: true,
+      },
+    });
+    return mainCategoryList;
+  } catch (error) {
+    console.error(error);
+    throw error;
+  }
+}
+
 export async function fetchMainCategoryPostCount(
   query: string,
 ): Promise<number> {
@@ -211,6 +226,37 @@ export async function fetchPostById(id: number): Promise<PostWithCategory> {
   }
 }
 
+export async function createMainCategory(name: string) {
+  try {
+    const res = await prisma.mainCategory.create({
+      data: {
+        name: name,
+      },
+    });
+
+    return res;
+  } catch (error) {
+    console.error(error);
+    throw error;
+  }
+}
+
+export async function createSubCategory(name: string, mainCategoryId: number) {
+  try {
+    const res = await prisma.subCategory.create({
+      data: {
+        name: name,
+        mainCategoryId: mainCategoryId,
+      },
+    });
+
+    return res;
+  } catch (error) {
+    console.error(error);
+    throw error;
+  }
+}
+
 export async function createPost(
   title: string,
   content: string,
@@ -230,6 +276,42 @@ export async function createPost(
   } catch (error) {
     console.error(error);
     throw new Error("Failed to create post");
+  }
+}
+
+export async function updateMainCategory(mainCategoryId: number, name: string) {
+  try {
+    const res = await prisma.mainCategory.update({
+      where: { id: mainCategoryId },
+      data: {
+        name: name,
+      },
+    });
+    return res;
+  } catch (error) {
+    console.error(error);
+    throw error;
+  }
+}
+
+export async function updateSubCategory(
+  subCategoryId: number,
+  name: string,
+  parentId?: number,
+) {
+  const updateData = parentId
+    ? { name: name }
+    : { name: name, mainCategoryId: parentId };
+
+  try {
+    const res = await prisma.subCategory.update({
+      where: { id: subCategoryId },
+      data: updateData,
+    });
+    return res;
+  } catch (error) {
+    console.error(error);
+    throw error;
   }
 }
 

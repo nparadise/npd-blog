@@ -15,9 +15,10 @@ datasource db {
 }
 
 model MainCategory {
-  id       Int           @id @default(autoincrement())
-  name     String        @unique
-  children SubCategory[]
+  id        Int           @id @default(autoincrement())
+  name      String        @unique
+  children  SubCategory[]
+  isDeleted Boolean       @default(false)
 }
 
 model SubCategory {
@@ -26,6 +27,7 @@ model SubCategory {
   parent         MainCategory @relation(fields: [mainCategoryId], references: [id])
   mainCategoryId Int
   posts          Post[]
+  isDeleted      Boolean      @default(false)
 }
 
 model Post {
@@ -42,7 +44,7 @@ model Post {
 model User {
   id       Int    @id @default(autoincrement())
   email    String @unique
-  password String 
+  password String
 
   @@map("user")
 }

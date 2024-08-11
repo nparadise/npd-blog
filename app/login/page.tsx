@@ -5,7 +5,7 @@ import { authenticate } from "@/app/lib/actions";
 import LoginForm from "@/app/components/login/LoginForm";
 
 export const metadata: Metadata = {
-  title: "Login | NPD Blog",
+  title: "로그인",
 };
 
 interface Props {

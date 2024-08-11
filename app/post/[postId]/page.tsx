@@ -3,18 +3,23 @@ import DeleteForm from "@/app/components/DeleteForm";
 import MarkdownView from "@/app/components/MarkdownView";
 import { fetchPostById } from "@/app/lib/database";
 import Link from "next/link";
+import { Metadata } from "next";
 
-export default async function PostPage({
+interface Params {
+  params: { postId: string };
+  searchParams: { delete: string };
+}
+
+export async function generateMetadata({
   params,
-  searchParams,
-}: {
-  params: {
-    postId: string;
-  };
-  searchParams: {
-    delete: string;
-  };
-}) {
+}: Params): Promise<Metadata> {
+  const title = await fetchPostById(parseInt(params.postId)).then(
+    (v) => v.post.title,
+  );
+  return { title: title };
+}
+
+export default async function PostPage({ params, searchParams }: Params) {
   const { post, mainCategory, subCategory } = await fetchPostById(
     parseInt(params.postId),
   );

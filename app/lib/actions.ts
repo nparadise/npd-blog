@@ -6,7 +6,12 @@ import { z } from "zod";
 import bcrypt from "bcrypt";
 import { prisma } from "./client";
 import { redirect } from "next/navigation";
-import { auth } from "@/auth";
+import {
+  createMainCategory,
+  createSubCategory,
+  updateMainCategory as updateMainInDB,
+  updateSubCategory as updateSubInDB,
+} from "./database";
 
 export async function authenticate(
   prevState: string | undefined,
@@ -82,5 +87,105 @@ export async function logout() {
     throw error;
   } finally {
     redirect("/");
+  }
+}
+
+export async function addMainCategory(
+  prevState: string | undefined,
+  formData: FormData,
+) {
+  try {
+    const name = formData.get("name");
+    if (!name) return "No Input";
+
+    const res = await prisma.mainCategory.findUnique({
+      where: { name: name as string },
+    });
+    if (res) return "Main Category already exists";
+
+    await createMainCategory(name as string);
+  } catch (error) {
+    console.error(error);
+    throw error;
+  } finally {
+    redirect("/setting/category");
+  }
+}
+
+export async function addSubCategory(
+  prevState: string | undefined,
+  formData: FormData,
+) {
+  try {
+    const name = formData.get("name") as string;
+    const mainCategoryId = formData.get("mainCategory") as string;
+    if (!name) return "No name input";
+    if (!mainCategoryId) return "Something gone wrong";
+
+    const res = await prisma.subCategory.findFirst({
+      where: {
+        name: name,
+        mainCategoryId: parseInt(mainCategoryId),
+      },
+    });
+    if (res) return "Sub Category already exists";
+
+    await createSubCategory(name, parseInt(mainCategoryId));
+  } catch (error) {
+    console.error(error);
+    throw error;
+  } finally {
+    redirect("/setting/category");
+  }
+}
+
+export async function updateMainCategory(
+  prevState: string | undefined,
+  formData: FormData,
+) {
+  try {
+    const name = formData.get("name") as string;
+    const id = formData.get("id") as string;
+    if (!name) return "No Input";
+
+    const res = await prisma.mainCategory.findUnique({
+      where: { name: name },
+    });
+    if (res) return "Same main category name already exists";
+
+    await updateMainInDB(parseInt(id), name);
+  } catch (error) {
+    console.error(error);
+    throw error;
+  } finally {
+    redirect("/setting/category");
+  }
+}
+
+export async function updateSubCategory(
+  prevState: string | undefined,
+  formData: FormData,
+) {
+  try {
+    const name = formData.get("name") as string;
+    const id = parseInt(formData.get("id") as string);
+    const parentId = parseInt(formData.get("mainCategory") as string);
+    if (!name) return "No name input";
+
+    const res = await prisma.subCategory.findFirst({
+      where: {
+        name: name,
+        mainCategoryId: parentId,
+      },
+    });
+    if (res)
+      return "Same sub category name already exists in this main category";
+
+    await updateSubInDB(id, name, parentId);
+  } catch (error) {
+    console.error(error);
+    throw error;
+  } finally {
+    redirect("/setting/category");
   }
 }

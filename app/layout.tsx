@@ -7,7 +7,6 @@ import {
 import "./globals.css";
 import SideMenu from "@/app/components/SideMenu";
 import Navigation from "@/app/components/Navigation";
-import AuthSession from "./components/AuthSession";
 import { auth } from "@/auth";
 import { Session } from "next-auth";
 
@@ -30,7 +29,7 @@ const nanum_coding = Nanum_Gothic_Coding({
 });
 
 export const metadata: Metadata = {
-  title: "NPD Blog",
+  title: { default: "NPD Blog", template: "%s | NPD Blog" },
   description: "My Blog",
 };
 
@@ -48,12 +47,12 @@ export default async function RootLayout({
     >
       <body className="h-dvh w-dvw font-gothic md:grid md:grid-cols-4 lg:grid-cols-5">
         {/* <AuthSession> */}
-          <SideMenu session={session}>
-            <Navigation />
-          </SideMenu>
-          <main className="h-full overflow-x-hidden overflow-y-scroll pt-14 md:col-span-3 md:px-2 md:pt-0 lg:col-span-4">
-            {children}
-          </main>
+        <SideMenu session={session}>
+          <Navigation />
+        </SideMenu>
+        <main className="h-full overflow-x-hidden overflow-y-scroll pt-14 md:col-span-3 md:px-2 md:pt-0 lg:col-span-4">
+          {children}
+        </main>
         {/* </AuthSession> */}
       </body>
     </html>
