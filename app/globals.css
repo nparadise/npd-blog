@@ -10,10 +10,24 @@
 
 @layer components {
   .main-button {
-    @apply w-fit min-w-10 rounded-sm bg-blue-400 py-1 px-2 text-white hover:bg-blue-600 active:bg-blue-800;
+    @apply w-fit min-w-10 rounded-sm bg-blue-400 px-2 py-1 text-white hover:bg-blue-600 active:bg-blue-800;
   }
 
   .alert-button {
-    @apply w-fit min-w-10 rounded-sm bg-red-400 py-1 px-2 text-white hover:bg-red-600 active:bg-red-800;
+    @apply w-fit min-w-10 rounded-sm bg-red-400 px-2 py-1 text-white hover:bg-red-600 active:bg-red-800;
+  }
+
+  .preview {
+    ul {
+      @apply list-disc;
+    }
+
+    ul ul {
+      list-style-type: square;
+    }
+
+    ul ul ul {
+      list-style-type: circle;
+    }
   }
 }
