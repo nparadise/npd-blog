@@ -10,9 +10,7 @@ interface Params {
   searchParams: { delete: string };
 }
 
-export async function generateMetadata({
-  params,
-}: Params): Promise<Metadata> {
+export async function generateMetadata({ params }: Params): Promise<Metadata> {
   const title = await fetchPostById(parseInt(params.postId)).then(
     (v) => v.post.title,
   );
