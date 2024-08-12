@@ -62,7 +62,7 @@ export default function MarkdownEditor({ postData, onSubmit }: Props) {
         onChange={(v) => setContent(!!v ? v : "")}
         minHeight={500}
         height={500}
-        className="mt-2"
+        className="preview mt-2"
       />
       <button
         type="button"

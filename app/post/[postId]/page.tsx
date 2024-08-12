@@ -45,7 +45,7 @@ export default async function PostPage({ params, searchParams }: Params) {
 
       <article
         data-color-mode="light"
-        className="m-2 break-words rounded-sm border-2 border-blue-300 p-4 md:mx-1"
+        className="preview m-2 break-words rounded-sm border-2 border-blue-300 p-4 md:mx-1"
       >
         <MarkdownView content={post.content} />
       </article>
