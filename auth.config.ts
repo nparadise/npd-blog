@@ -5,16 +5,17 @@ export const authConfig = {
     signIn: "/login",
   },
   session: {
-    strategy: 'jwt',
+    strategy: "jwt",
     maxAge: 60 * 60 * 1, // 1 hour
   },
   callbacks: {
     authorized({ auth, request: { nextUrl } }) {
       const isLoggedIn = !!auth?.user;
-      const isOnEditPost =
+      const isOnAdminPage =
         nextUrl.pathname.startsWith("/create") ||
-        nextUrl.pathname.startsWith("/edit");
-      if (isOnEditPost && !isLoggedIn) {
+        nextUrl.pathname.startsWith("/edit") ||
+        nextUrl.pathname.startsWith("/setting");
+      if (isOnAdminPage && !isLoggedIn) {
         return false;
       }
       return true;
