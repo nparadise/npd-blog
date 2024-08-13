@@ -28,8 +28,11 @@ export default function PostList({ posts }: Props) {
             >
               {post.title}
             </Link>
-            <time className="block text-sm leading-tight">
-              {" " + post.createdAt.toLocaleString()}
+            {"subCategoryName" in post ? (
+              <span className="inline-block text-sm leading-tight me-1">{post.subCategoryName} - </span>
+            ) : null}
+            <time className="inline-block text-sm leading-tight">
+              {post.createdAt.toLocaleString()}
             </time>
           </li>
         ))}
