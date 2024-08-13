@@ -1,7 +1,7 @@
 "use client";
 
 import Image from "next/image";
-import { FaBars } from "react-icons/fa6";
+import { FaBars, FaGears } from "react-icons/fa6";
 
 import profile from "@/public/Logo.jpg";
 import useComponentVisible from "@/app/hooks/useComponentVisible";
@@ -44,6 +44,14 @@ export default function SideMenu({ children, session }: Props) {
             <FaBars className="size-5" />
           </button>
         </div>
+        {!!session?.user && (
+          <Link
+            href="/setting"
+            className="absolute left-2 top-2 rounded-md bg-gray-300 p-1 hover:bg-gray-100 active:bg-gray-500"
+          >
+            <FaGears />
+          </Link>
+        )}
       </div>
       <nav
         className={clsx(
@@ -53,10 +61,13 @@ export default function SideMenu({ children, session }: Props) {
       >
         {children}
       </nav>
-      {!!session?.user && (
+      {!!session?.user ? (
         <form
           action={logout}
-          className="md:absolute md:bottom-0 md:w-full md:bg-blue-400"
+          className={clsx(
+            "overflow-hidden transition-all md:absolute md:bottom-0 md:max-h-none md:w-full md:bg-blue-400",
+            { "max-h-screen": isNavVisible, "max-h-0": !isNavVisible },
+          )}
         >
           <button
             type="submit"
@@ -65,6 +76,20 @@ export default function SideMenu({ children, session }: Props) {
             Logout
           </button>
         </form>
+      ) : (
+        <div
+          className={clsx(
+            "overflow-hidden transition-all md:absolute md:bottom-0 md:max-h-none md:w-full md:bg-blue-400",
+            { "max-h-screen": isNavVisible, "max-h-0": !isNavVisible },
+          )}
+        >
+          <Link
+            href="/login"
+            className="mx-auto mb-2 block w-fit border border-black bg-gray-300 px-2 py-1"
+          >
+            로그인
+          </Link>
+        </div>
       )}
     </div>
   );
