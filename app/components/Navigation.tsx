@@ -7,8 +7,10 @@ export default async function Navigation() {
 
   return (
     <>
-      {categories.map(({ name: mainCategory, children }) => {
+      {categories.map(({ name: mainCategory, isDeleted, children }) => {
         if (children.length === 0) return null;
+        if (isDeleted) return null;
+        if (children.filter((v) => !v.isDeleted).length === 0) return null;
 
         return (
           <>
@@ -24,17 +26,20 @@ export default async function Navigation() {
               </Link>
             </h5>
             <ul>
-              {children.map(({ name: subCategory }) => (
-                <NavListItem
-                  key={`link-sub-${subCategory}`}
-                  href={{
-                    pathname: `/${encodeURI(mainCategory)}`,
-                    query: { subCategory: encodeURI(subCategory) },
-                  }}
-                >
-                  {subCategory}
-                </NavListItem>
-              ))}
+              {children.map(({ name: subCategory, isDeleted }) => {
+                if (isDeleted) return null;
+                return (
+                  <NavListItem
+                    key={`link-sub-${subCategory}`}
+                    href={{
+                      pathname: `/${encodeURI(mainCategory)}`,
+                      query: { subCategory: encodeURI(subCategory) },
+                    }}
+                  >
+                    {subCategory}
+                  </NavListItem>
+                );
+              })}
             </ul>
           </>
         );
