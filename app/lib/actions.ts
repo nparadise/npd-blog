@@ -5,13 +5,14 @@ import { AuthError } from "next-auth";
 import { z } from "zod";
 import bcrypt from "bcrypt";
 import { prisma } from "./client";
-import { redirect } from "next/navigation";
+import { redirect, RedirectType } from "next/navigation";
 import {
   createMainCategory,
   createSubCategory,
   updateMainCategory as updateMainInDB,
   updateSubCategory as updateSubInDB,
 } from "./database";
+import { PrismaPromise } from "@prisma/client";
 
 export async function authenticate(
   prevState: string | undefined,
@@ -187,5 +188,81 @@ export async function updateSubCategory(
     throw error;
   } finally {
     redirect("/setting/category");
+  }
+}
+
+export async function deleteCategory(formData: FormData) {
+  try {
+    const target = formData.get("target") as string;
+    const id = parseInt(formData.get("id") as string);
+    if (!id) throw new Error("No ID Input");
+
+    if (target === "main") {
+      const main = prisma.mainCategory.update({
+        where: { id: id },
+        data: { isDeleted: true },
+      });
+      const sub = prisma.subCategory.updateMany({
+        where: { mainCategoryId: id },
+        data: { isDeleted: true },
+      });
+
+      await prisma.$transaction([main, sub]);
+    } else if (target === "sub") {
+      await prisma.subCategory.update({
+        where: { id: id },
+        data: { isDeleted: true },
+      });
+    } else {
+      throw new Error("Wrong target input");
+    }
+  } catch (error) {
+    console.error(error);
+    throw error;
+  } finally {
+    redirect("/setting/category", RedirectType.replace);
+  }
+}
+
+export async function recoverCategory(formData: FormData) {
+  try {
+    const target = formData.get("target") as string;
+    const id = parseInt(formData.get("id") as string);
+    const includedSub = (formData.get("includeSub") as string) === "true";
+    console.log(target, id, includedSub);
+    if (!target || !id) throw new Error("Invalid Input");
+
+    if (target === "main") {
+      const dbQueryList: PrismaPromise<any>[] = [];
+      dbQueryList.push(
+        prisma.mainCategory.update({
+          where: { id: id },
+          data: { isDeleted: false },
+        }),
+      );
+      if (includedSub) {
+        dbQueryList.push(
+          prisma.subCategory.updateMany({
+            where: {
+              mainCategoryId: id,
+            },
+            data: { isDeleted: false },
+          }),
+        );
+      }
+      await prisma.$transaction(dbQueryList);
+    } else if (target === "sub") {
+      await prisma.subCategory.update({
+        where: { id: id },
+        data: { isDeleted: false },
+      });
+    } else {
+      throw new Error("Wrong target input");
+    }
+  } catch (error) {
+    console.error(error);
+    throw error;
+  } finally {
+    redirect("/setting/category", RedirectType.replace);
   }
 }

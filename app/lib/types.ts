@@ -32,12 +32,14 @@ export declare interface PostWithSubCategory extends Post {
 export declare interface MainCategory {
   id: number;
   name: string;
+  isDeleted: boolean;
 }
 
 export declare interface SubCategory {
   id: number;
   name: string;
   mainCategoryId: number;
+  isDeleted: boolean;
 }
 
 export declare interface User {
