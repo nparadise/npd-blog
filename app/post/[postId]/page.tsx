@@ -27,7 +27,7 @@ export default async function PostPage({ params, searchParams }: Params) {
   return (
     <>
       <Title main={mainCategory} sub={subCategory} />
-      <header className="sticky mx-2 md:mx-1">
+      <header className="mx-2 md:mx-1">
         <h1 className="inline text-xl font-bold">{post.title}</h1>
         <div className="text-sm">
           <time dateTime={post.createdAt.toLocaleString()}>
